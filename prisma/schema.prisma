@@ -6,6 +6,46 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ItemType {
+  ARMADURA
+  POCAO
+  PERGAMINHO
+  ANEL
+  BASTAO
+  CAJADO
+  VARINHA
+  ARMA
+  MARAVILHOSO
+}
+
+enum ItemRarity {
+  COMUM
+  INCOMUM
+  RARO
+  MUITO_RARO
+  LENDARIO
+}
+
+enum PlaneType {
+  INTERIOR
+  EXTERIOR
+  TRANSICIONAL
+  MATERIAL
+}
+
+enum PoisonType {
+  CONTATO
+  FERIMENTO
+  INALACAO
+  INGESTAO
+}
+
+enum MadnessDuration {
+  CURTA
+  LONGA
+  PERMANENTE
+}
+
 model Deity {
   id                Int      @id @default(autoincrement())
   name              String   @unique
@@ -19,27 +59,31 @@ model Deity {
 }
 
 model Plane {
-  id             Int      @id @default(autoincrement())
-  name           String   @unique
-  type           String
+  id             Int         @id @default(autoincrement())
+  name           String      @unique
+  type           PlaneType
   description    String
   optionalRule   Json?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
 
 model MagicItem {
-  id                     Int      @id @default(autoincrement())
-  name                   String   @unique
-  type                   String
-  rarity                 String
-  requiresAttunement     Boolean  @default(false)
+  id                     Int             @id @default(autoincrement())
+  name                   String          @unique
+  type                   ItemType
+  rarity                 ItemRarity
+  requiresAttunement     Boolean         @default(false)
   attunementPrerequisite String?
   description            String
   table                  String
   sentience              Json?
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  communication          String?
+  senses                 String?
+  alignment              String?
+  personality            String?
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
 }
 
 model Gem {
@@ -71,17 +115,17 @@ model Artifact {
 }
 
 model Poison {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique
-  type         String
+  id           Int         @id @default(autoincrement())
+  name         String      @unique
+  type         PoisonType
   pricePerDose Int
   effect       String
   savingThrow  Json
   damage       String?
   duration     String?
   condition    String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 }
 
 model Disease {
@@ -97,30 +141,31 @@ model Disease {
 }
 
 model Madness {
-  id        Int      @id @default(autoincrement())
-  duration  String
+  id        Int             @id @default(autoincrement())
+  duration  MadnessDuration
   d100Min   Int
   d100Max   Int
   effect    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 }
 
 model NPC {
-  id          Int      @id @default(autoincrement())
-  name        String?
-  occupation  String?
-  appearance  String?
-  ability     String?
-  talent      String?
-  mannerism   String?
-  interaction String?
-  ideal       String?
-  bond        String?
-  flaw        String?
-  type        String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  name            String?
+  occupation      String?
+  appearance      String?
+  ability         String?
+  talent          String?
+  mannerism       String?
+  interaction     String?
+  ideal           String?
+  bond            String?
+  flaw            String?
+  usefulKnowledge String?
+  type            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Villain {
@@ -131,6 +176,7 @@ model Villain {
   goal             String?
   methods          String?
   weakness         String?
+  villainClass     String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
@@ -162,18 +208,20 @@ model DungeonRoom {
 }
 
 model Monster {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  cr          String
-  type        String
-  size        String
-  ac          Int?
-  hp          String?
-  attackBonus Int?
-  damage      String?
-  saveDC      Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  cr            String
+  type          String
+  size          String
+  ac            Int?
+  hp            String?
+  attackBonus   Int?
+  damage        String?
+  damagePerRound String?
+  saveDC        Int?
+  profBonus     Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Faction {
@@ -195,4 +243,179 @@ model DowntimeActivity {
   table       Json?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// Sprint 3 — Componentes de Aventura (Cap. 3)
+model AdventureObjective {
+  id     Int    @id @default(autoincrement())
+  text   String
+  type   String // dungeon | wilderness | event | other
+  dice   String? // d20, d12
+}
+
+model AdventureVillainType {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model AdventureAlly {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model AdventurePatron {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model AdventureIntroduction {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model AdventureClimax {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model VillainAction {
+  id          Int    @id @default(autoincrement())
+  type        String
+  description String
+}
+
+// Sprint 4 — Traços de NPC (Cap. 4, págs. 89-92)
+model NpcAppearance {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model NpcAbility {
+  id          Int    @id @default(autoincrement())
+  type        String // high | low
+  ability     String
+  description String
+}
+
+model NpcTalent {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model NpcMannerism {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model NpcInteraction {
+  id    Int    @id @default(autoincrement())
+  trait String
+}
+
+model NpcIdeal {
+  id          Int    @id @default(autoincrement())
+  alignment   String // good | evil | lawful | chaotic | neutral | other
+  description String
+}
+
+model NpcBond {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model NpcFlaw {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+// Sprint 5 — Tabelas de Masmorra (Apêndice A, págs. 291-296)
+model DungeonStartingArea {
+  id          Int    @id @default(autoincrement())
+  description String
+}
+
+model DungeonPassage {
+  id       Int     @id @default(autoincrement())
+  type     String
+  length   Int
+  features String?
+}
+
+model DungeonDoor {
+  id       Int     @id @default(autoincrement())
+  material String  // madeira | pedra | ferro
+  isSecret Boolean @default(false)
+  isBarred Boolean @default(false)
+  isLocked Boolean @default(false)
+}
+
+model DungeonChamber {
+  id         Int    @id @default(autoincrement())
+  shape      String
+  dimensions String
+}
+
+// Sprint 9 — Regras (Cap. 8-9, págs. 238-276)
+model AbilityCheck {
+  id       Int    @id @default(autoincrement())
+  ability  String
+  examples String
+}
+
+model DifficultyClass {
+  id   Int    @id @default(autoincrement())
+  task String
+  dc   Int
+}
+
+model SavingThrow {
+  id         Int    @id @default(autoincrement())
+  ability    String
+  situations String
+}
+
+model ChaseComplication {
+  id          Int    @id @default(autoincrement())
+  environment String // urban | wilderness
+  description String
+  saveDc      Int
+}
+
+model SiegeWeapon {
+  id     Int    @id @default(autoincrement())
+  name   String
+  size   String
+  ac     Int
+  hp     Int
+  damage String
+  crew   String
+}
+
+model XpByCr {
+  id Int @id @default(autoincrement())
+  cr Int
+  xp Int
+}
+
+// Sprint 10 — Estatísticas de Monstro (Cap. 9, pág. 275)
+model MonsterStatByCr {
+  id          Int @id @default(autoincrement())
+  cr          Int
+  profBonus   Int
+  ac          Int
+  hpMin       Int
+  hpMax       Int
+  attackBonus Int
+  damageMin   Int
+  damageMax   Int
+  saveDc      Int
+}
+
+// Sprint 11 — Propriedades (Cap. 6, pág. 127)
+model PropertyMaintenanceCost {
+  id                Int    @id @default(autoincrement())
+  propertyType      String
+  dailyCost         Int
+  trainedServants   Int
+  untrainedServants Int
 }
