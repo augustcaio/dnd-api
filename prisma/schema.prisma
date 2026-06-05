@@ -114,6 +114,33 @@ model Artifact {
   updatedAt   DateTime @updatedAt
 }
 
+// Sprint 6 — Tabelas de Tesouro (Cap. 7, págs. 136-137)
+model IndividualTreasure {
+  id      Int    @id @default(autoincrement())
+  crRange String // "0-4" | "5-10" | "11-16" | "17+"
+  d100Min Int
+  d100Max Int
+  cp      String? // quantity or "—"
+  sp      String?
+  ep      String?
+  gp      String?
+  pp      String?
+}
+
+model HoardTreasure {
+  id          Int    @id @default(autoincrement())
+  crRange     String // "0-4" | "5-10" | "11-16" | "17+"
+  coinCp      String?
+  coinSp      String?
+  coinEp      String?
+  coinGp      String?
+  coinPp      String?
+  d100Min     Int
+  d100Max     Int
+  itemType    String // "gems" | "art" | "magic_item_table_a" | etc.
+  itemAmount  String // e.g. "2d4", "1d4"
+}
+
 model Poison {
   id           Int         @id @default(autoincrement())
   name         String      @unique
@@ -397,6 +424,15 @@ model XpByCr {
   xp Int
 }
 
+model OptionalRule {
+  id          Int    @id @default(autoincrement())
+  name        String
+  slug        String @unique
+  description String
+  page        Int
+  content     Json
+}
+
 // Sprint 10 — Estatísticas de Monstro (Cap. 9, pág. 275)
 model MonsterStatByCr {
   id          Int @id @default(autoincrement())
@@ -418,4 +454,21 @@ model PropertyMaintenanceCost {
   dailyCost         Int
   trainedServants   Int
   untrainedServants Int
+}
+
+// Sprint 11 — Tabelas de Farra e Negócio (Cap. 6, págs. 128-129)
+model CarousingResult {
+  id          Int    @id @default(autoincrement())
+  d100Min     Int
+  d100Max     Int
+  result      String
+  description String
+}
+
+model BusinessResult {
+  id          Int    @id @default(autoincrement())
+  d100Min     Int
+  d100Max     Int
+  result      String
+  description String
 }
