@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Deity {
+  id                Int      @id @default(autoincrement())
+  name              String   @unique
+  description       String
+  alignment         String
+  suggestedDomains  String[]
+  symbol            String
+  portfolio         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Plane {
+  id             Int      @id @default(autoincrement())
+  name           String   @unique
+  type           String
+  description    String
+  optionalRule   Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model MagicItem {
+  id                     Int      @id @default(autoincrement())
+  name                   String   @unique
+  type                   String
+  rarity                 String
+  requiresAttunement     Boolean  @default(false)
+  attunementPrerequisite String?
+  description            String
+  table                  String
+  sentience              Json?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model Gem {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  value       Int
+  opacity     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ArtObject {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  value       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Artifact {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  properties  Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Poison {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  type         String
+  pricePerDose Int
+  effect       String
+  savingThrow  Json
+  damage       String?
+  duration     String?
+  condition    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Disease {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  transmission String
+  incubation   String
+  symptoms     String
+  savingThrow  Json
+  cure         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Madness {
+  id        Int      @id @default(autoincrement())
+  duration  String
+  d100Min   Int
+  d100Max   Int
+  effect    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NPC {
+  id          Int      @id @default(autoincrement())
+  name        String?
+  occupation  String?
+  appearance  String?
+  ability     String?
+  talent      String?
+  mannerism   String?
+  interaction String?
+  ideal       String?
+  bond        String?
+  flaw        String?
+  type        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Villain {
+  id               Int      @id @default(autoincrement())
+  name             String
+  type             String
+  description      String?
+  goal             String?
+  methods          String?
+  weakness         String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Adventure {
+  id             Int      @id @default(autoincrement())
+  objective      String
+  objectiveType  String
+  villain        String?
+  villainAction  String?
+  ally           String?
+  patron         String?
+  introduction   String?
+  climax         String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model DungeonRoom {
+  id        Int      @id @default(autoincrement())
+  type      String
+  shape     String?
+  dimensions String?
+  exits     String?
+  purpose   String?
+  content   Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Monster {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  cr          String
+  type        String
+  size        String
+  ac          Int?
+  hp          String?
+  attackBonus Int?
+  damage      String?
+  saveDC      Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Faction {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  alignment   String?
+  influence   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DowntimeActivity {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  cost        String?
+  timeCost    String?
+  table       Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
