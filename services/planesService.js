@@ -1,8 +1,12 @@
 const prisma = require('../utils/prisma');
 const { createError } = require('../middleware/errorHandler');
 
-const findAll = async () => {
-  return prisma.plane.findMany({ orderBy: { name: 'asc' } });
+const findAll = async (filters = {}) => {
+  const where = {};
+  if (filters.tipo) {
+    where.type = filters.tipo;
+  }
+  return prisma.plane.findMany({ where, orderBy: { name: 'asc' } });
 };
 
 const findById = async (id) => {

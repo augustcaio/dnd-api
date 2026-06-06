@@ -1,8 +1,11 @@
 const deitiesService = require('../services/deitiesService');
 
-const list = async (_req, res, next) => {
+const list = async (req, res, next) => {
   try {
-    const deities = await deitiesService.findAll();
+    const filters = {};
+    if (req.query.dominio) filters.dominio = req.query.dominio;
+    if (req.query.tendencia) filters.tendencia = req.query.tendencia;
+    const deities = await deitiesService.findAll(filters);
     res.json({ count: deities.length, data: deities });
   } catch (err) {
     next(err);

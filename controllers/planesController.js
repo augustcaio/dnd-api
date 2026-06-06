@@ -1,8 +1,10 @@
 const planesService = require('../services/planesService');
 
-const list = async (_req, res, next) => {
+const list = async (req, res, next) => {
   try {
-    const planes = await planesService.findAll();
+    const filters = {};
+    if (req.query.tipo) filters.tipo = req.query.tipo;
+    const planes = await planesService.findAll(filters);
     res.json({ count: planes.length, data: planes });
   } catch (err) {
     next(err);

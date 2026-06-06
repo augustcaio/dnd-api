@@ -1,8 +1,15 @@
 const prisma = require('../utils/prisma');
 const { createError } = require('../middleware/errorHandler');
 
-const findAll = async () => {
-  return prisma.deity.findMany({ orderBy: { name: 'asc' } });
+const findAll = async (filters = {}) => {
+  const where = {};
+  if (filters.dominio) {
+    where.suggestedDomains = { has: filters.dominio };
+  }
+  if (filters.tendencia) {
+    where.alignment = filters.tendencia;
+  }
+  return prisma.deity.findMany({ where, orderBy: { name: 'asc' } });
 };
 
 const findById = async (id) => {
